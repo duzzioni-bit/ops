@@ -1,0 +1,229 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(VENDEDOR)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts   Account[]
+  sessions   Session[]
+  orcamentos Orcamento[]
+  pedidos    Pedido[]
+  recibos    Recibo[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Business Models
+enum UserRole {
+  ADMIN
+  GERENTE
+  VENDEDOR
+}
+
+enum StatusOrcamento {
+  PENDENTE
+  APROVADO
+  REJEITADO
+  CONVERTIDO
+}
+
+enum StatusPedido {
+  NOVO
+  EM_PRODUCAO
+  PRONTO
+  ENTREGUE
+  CANCELADO
+}
+
+model Orcamento {
+  id             String          @id @default(cuid())
+  numero         String          @unique
+  cliente        String
+  endereco       String?
+  valor          Float
+  status         StatusOrcamento @default(PENDENTE)
+  dataVencimento DateTime
+  observacoes    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  // Relacionamentos
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  itens   ItemOrcamento[]
+  pedidos Pedido[]
+
+  @@map("orcamentos")
+}
+
+model Produto {
+  id            String   @id @default(cuid())
+  codigo        String   @unique
+  nome          String
+  descricao     String?
+  preco         Float
+  categoria     String
+  unidade       String   @default("un")
+  ativo         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relacionamentos
+  itensOrcamento ItemOrcamento[]
+  itensPedido    ItemPedido[]
+
+  @@map("produtos")
+}
+
+model ItemOrcamento {
+  id            String  @id @default(cuid())
+  produto       String  // Manter para compatibilidade
+  quantidade    Int
+  valorUnitario Float
+  valorTotal    Float
+  observacoes   String?
+
+  // Relacionamentos
+  orcamentoId String
+  orcamento   Orcamento @relation(fields: [orcamentoId], references: [id], onDelete: Cascade)
+  
+  produtoId   String?
+  produtoRef  Produto?  @relation(fields: [produtoId], references: [id])
+
+  @@map("itens_orcamento")
+}
+
+model ItemPedido {
+  id            String  @id @default(cuid())
+  quantidade    Int
+  valorUnitario Float
+  valorTotal    Float
+  observacoes   String?
+  
+  // Relacionamentos
+  pedidoId      String
+  pedido        Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produtoId     String
+  produto       Produto @relation(fields: [produtoId], references: [id])
+
+  @@map("itens_pedido")
+}
+
+model Pedido {
+  id          String      @id @default(cuid())
+  numero      String      @unique
+  cliente     String
+  endereco    String?     // Campo de endereço opcional
+  valor       Float
+  status      StatusPedido @default(NOVO)
+  dataEntrega DateTime
+  observacoes String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relacionamentos
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  orcamentoId String?
+  orcamento   Orcamento? @relation(fields: [orcamentoId], references: [id])
+  
+  itens       ItemPedido[]
+
+  @@map("pedidos")
+}
+
+model Configuracao {
+  id    String @id @default(cuid())
+  chave String @unique
+  valor String
+  tipo  String @default("string") // string, boolean, number, json
+  descricao String?
+  categoria String @default("geral") // geral, empresa, sistema, recursos
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("configuracoes")
+}
+
+model Recibo {
+  id    String @id @default(cuid())
+  numero String
+  valor Float
+  
+  // Dados do pagador
+  pagadorNome String
+  pagadorCpf  String?
+  
+  // Dados do recebedor  
+  recebedorNome String
+  recebedorCpf  String?
+  
+  referente   String   // Descrição do serviço/produto
+  data        DateTime // Data do pagamento
+  observacoes String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relacionamentos
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  
+  @@unique([numero, userId])
+  @@map("recibos")
+}
