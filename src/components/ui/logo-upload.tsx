@@ -145,7 +145,7 @@ export function LogoUpload({ currentLogo, onUploadSuccess }: LogoUploadProps) {
                 <div>
                   <p className="font-medium">Logo atual</p>
                   <p className="text-sm text-gray-500">
-                    Clique em "Selecionar novo logo" para alterar
+                    Clique em &ldquo;Selecionar novo logo&rdquo; para alterar
                   </p>
                 </div>
               </div>

@@ -428,7 +428,7 @@ export default function LandingPage() {
                     ))}
                   </div>
                   <p className="text-gray-700 mb-4 italic">
-                    "{testimonial.text}"
+                    &ldquo;{testimonial.text}&rdquo;
                   </p>
                   <div>
                     <p className="font-semibold text-gray-900">{testimonial.name}</p>
