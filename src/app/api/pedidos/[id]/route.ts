@@ -71,7 +71,7 @@ export async function GET(
 const updatePedidoSchema = z.object({
   cliente: z.string().min(1, "Cliente é obrigatório"),
   endereco: z.string().optional().nullable().transform(val => val || undefined),
-  status: z.string().optional().default("NOVO").transform((val) => val?.toUpperCase() || "NOVO"),
+  status: z.enum(["NOVO", "EM_PRODUCAO", "PRONTO", "ENTREGUE", "CANCELADO"]).optional().default("NOVO"),
   dataEntrega: z.string().transform((val) => new Date(val)),
   observacoes: z.string().optional().nullable().transform(val => val || undefined),
 });

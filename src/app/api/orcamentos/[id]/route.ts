@@ -66,7 +66,7 @@ export async function GET(
 const updateOrcamentoSchema = z.object({
   cliente: z.string().min(1, "Cliente é obrigatório"),
   endereco: z.string().optional().nullable().transform(val => val || undefined),
-  status: z.string().optional().default("PENDENTE").transform((val) => val?.toUpperCase() || "PENDENTE"),
+  status: z.enum(["PENDENTE", "APROVADO", "REJEITADO", "CONVERTIDO"]).optional().default("PENDENTE"),
   dataVencimento: z.string().transform((val) => new Date(val)),
   observacoes: z.string().optional().nullable().transform(val => val || undefined),
   valor: z.number().optional(),
@@ -133,7 +133,7 @@ export async function PUT(
             status: validatedData.status,
             dataVencimento: validatedData.dataVencimento,
             observacoes: validatedData.observacoes,
-            valor: validatedData.valor || validatedData.itens.reduce((total, item) => total + item.valorTotal, 0),
+            valor: validatedData.valor || (validatedData.itens?.reduce((total, item) => total + item.valorTotal, 0) ?? 0),
           },
         });
 
@@ -143,8 +143,9 @@ export async function PUT(
         });
 
         // Criar novos itens
-        await tx.itemOrcamento.createMany({
-          data: validatedData.itens.map(item => ({
+        if (validatedData.itens) {
+          await tx.itemOrcamento.createMany({
+            data: validatedData.itens.map(item => ({
             orcamentoId: orcamentoId,
             produtoId: item.produtoId || undefined,
             produto: item.produto,
@@ -153,7 +154,8 @@ export async function PUT(
             valorTotal: item.valorTotal,
             observacoes: item.observacoes,
           })),
-        });
+          });
+        }
 
         // Buscar orçamento completo com itens
         return await tx.orcamento.findUnique({

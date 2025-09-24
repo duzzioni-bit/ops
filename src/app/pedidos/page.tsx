@@ -185,9 +185,9 @@ export default function PedidosPage() {
                       <CardDescription className="text-base">
                         {pedido.cliente}
                       </CardDescription>
-                      {pedido.orcamentoId && (
+                      {(pedido as any).orcamentoId && (
                         <p className="text-sm text-blue-600">
-                          Originado do orçamento #{pedido.orcamentoId}
+                          Originado do orçamento #{(pedido as any).orcamentoId}
                         </p>
                       )}
                     </div>

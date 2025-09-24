@@ -192,8 +192,7 @@ export default function ReciboPage() {
       <div className="space-y-6">
         <PageHeader
           title={`Recibo ${recibo.numero}`}
-          description={`Criado em ${formatDate(recibo.createdAt)}`}
-          icon={Receipt}
+          subtitle={`Criado em ${formatDate(recibo.createdAt)}`}
         />
 
         <div className="flex gap-4 mb-6">
@@ -284,7 +283,7 @@ export default function ReciboPage() {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">RG</label>
-                <p className="text-lg">{recibo.pagadorRg || "Não informado"}</p>
+                <p className="text-lg">{(recibo as any).pagadorRg || "Não informado"}</p>
               </div>
             </div>
           </CardContent>
@@ -307,7 +306,7 @@ export default function ReciboPage() {
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">RG</label>
-                <p className="text-lg">{recibo.recebedorRg || "Não informado"}</p>
+                <p className="text-lg">{(recibo as any).recebedorRg || "Não informado"}</p>
               </div>
             </div>
           </CardContent>

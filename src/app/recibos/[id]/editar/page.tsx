@@ -197,8 +197,7 @@ export default function EditarReciboPage() {
       <div className="space-y-6">
         <PageHeader
           title="Editar Recibo"
-          description={`Editando recibo ${formData.numero}`}
-          icon={Receipt}
+          subtitle={`Editando recibo ${formData.numero}`}
         />
 
         <div className="flex gap-4 mb-6">

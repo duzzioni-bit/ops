@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Upload, Image as ImageIcon, X, Loader2 } from 'lucide-react'
+import Image from 'next/image'
 import { triggerCompanyInfoUpdate } from '@/hooks/useCompanyConfig'
 
 interface LogoUploadProps {
@@ -137,9 +138,11 @@ export function LogoUpload({ currentLogo, onUploadSuccess }: LogoUploadProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <img 
+                <Image 
                   src={previewUrl} 
                   alt="Logo da empresa" 
+                  width={200}
+                  height={64}
                   className="h-16 w-auto max-w-[200px] object-contain border rounded"
                 />
                 <div>

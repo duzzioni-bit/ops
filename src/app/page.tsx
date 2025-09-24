@@ -185,7 +185,7 @@ export default function Dashboard() {
             value={totalOrcamentos}
             change={totalOrcamentos > 0 ? "Ativo" : "Nenhum"}
             changeType={totalOrcamentos > 0 ? "positive" : "neutral"}
-            trend={totalOrcamentos > 0 ? "up" : "neutral"}
+            trend={totalOrcamentos > 0 ? "up" : "stable"}
             icon={FileText}
             iconColor="text-blue-600"
           />
@@ -194,7 +194,7 @@ export default function Dashboard() {
             value={totalVendasConfirmadas}
             change={totalVendasConfirmadas > 0 ? `${totalVendasConfirmadas} vendas` : "Nenhuma"}
             changeType={totalVendasConfirmadas > 0 ? "positive" : "neutral"}
-            trend={totalVendasConfirmadas > 0 ? "up" : "neutral"}
+            trend={totalVendasConfirmadas > 0 ? "up" : "stable"}
             icon={CheckCircle}
             iconColor="text-green-600"
           />
@@ -203,7 +203,7 @@ export default function Dashboard() {
             value={formatCurrency(faturamentoConfirmado)}
             change={faturamentoConfirmado > 0 ? "Confirmado" : "Aguardando vendas"}
             changeType={faturamentoConfirmado > 0 ? "positive" : "neutral"}
-            trend={faturamentoConfirmado > 0 ? "up" : "neutral"}
+            trend={faturamentoConfirmado > 0 ? "up" : "stable"}
             icon={DollarSign}
             iconColor="text-green-600"
           />
@@ -212,7 +212,7 @@ export default function Dashboard() {
             value={formatCurrency(ticketMedio)}
             change={ticketMedio > 0 ? "Por venda" : "Sem dados"}
             changeType={ticketMedio > 0 ? "positive" : "neutral"}
-            trend={ticketMedio > 0 ? "up" : "neutral"}
+            trend={ticketMedio > 0 ? "up" : "stable"}
             icon={Target}
             iconColor="text-purple-600"
           />
@@ -221,7 +221,7 @@ export default function Dashboard() {
             value={`${taxaConversao}%`}
             change={totalOrcamentos > 0 ? "Orç. → Vendas" : "Sem dados"}
             changeType={Number(taxaConversao) > 0 ? "positive" : "neutral"}
-            trend={Number(taxaConversao) > 0 ? "up" : "neutral"}
+            trend={Number(taxaConversao) > 0 ? "up" : "stable"}
             icon={TrendingUp}
             iconColor="text-orange-600"
           />

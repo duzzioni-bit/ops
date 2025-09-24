@@ -137,7 +137,7 @@ export default function ProdutosPage() {
     setFormData({
       codigo: produto.codigo,
       nome: produto.nome,
-      descricao: produto.descricao,
+      descricao: produto.descricao || '',
       preco: produto.preco.toString(),
       categoria: produto.categoria,
       unidade: produto.unidade,

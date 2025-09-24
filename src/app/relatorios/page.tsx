@@ -184,7 +184,7 @@ export default function RelatoriosPage() {
 
   // Faturamento por mês
   const faturamentoPorMes = () => {
-    const meses = {};
+    const meses: Record<string, { mes: string; valor: number; vendas: number }> = {};
     pedidosFiltrados.forEach(pedido => {
       const data = new Date(pedido.createdAt);
       const chave = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
@@ -202,7 +202,7 @@ export default function RelatoriosPage() {
 
   // Top clientes
   const topClientes = () => {
-    const clientes = {};
+    const clientes: Record<string, { nome: string; orcamentos: number; pedidos: number; valorTotal: number }> = {};
     [...orcamentosFiltrados, ...pedidosFiltrados].forEach(item => {
       if (!clientes[item.cliente]) {
         clientes[item.cliente] = { nome: item.cliente, orcamentos: 0, pedidos: 0, valorTotal: 0 };
@@ -407,7 +407,7 @@ export default function RelatoriosPage() {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
@@ -439,7 +439,7 @@ export default function RelatoriosPage() {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
@@ -572,7 +572,7 @@ export default function RelatoriosPage() {
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          label={({ nome, participacao }) => `${nome} ${participacao.toFixed(1)}%`}
+                          label={({ nome, participacao }: any) => `${nome} ${(participacao as number).toFixed(1)}%`}
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="participacao"

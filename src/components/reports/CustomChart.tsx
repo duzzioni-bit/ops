@@ -51,7 +51,7 @@ export function CustomChart({
     return [value, name];
   };
 
-  const renderChart = () => {
+  const renderChart = (): React.ReactElement | null => {
     switch (type) {
       case "bar":
         return (
@@ -106,7 +106,7 @@ export function CustomChart({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`}
               outerRadius={80}
               fill="#8884d8"
               dataKey={valueKey}
@@ -143,7 +143,7 @@ export function CustomChart({
         <h3 className="text-lg font-semibold mb-4 text-center">{title}</h3>
       )}
       <ResponsiveContainer width="100%" height={height}>
-        {renderChart()}
+        {renderChart() || <div>Nenhum gráfico disponível</div>}
       </ResponsiveContainer>
     </div>
   );

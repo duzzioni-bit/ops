@@ -27,11 +27,7 @@ export async function POST(
         ...(session.user.role !== "ADMIN" ? { userId: session.user.id } : {})
       },
       include: {
-        itens: {
-          include: {
-            produtoRef: true,
-          },
-        },
+        itens: true,
       },
     });
 
@@ -85,16 +81,25 @@ export async function POST(
 
       // Criar os itens do pedido
       for (const item of orcamento.itens) {
-        await tx.itemPedido.create({
-          data: {
-            pedidoId: novoPedido.id,
-            produtoId: item.produtoId,
-            quantidade: item.quantidade,
-            valorUnitario: item.valorUnitario,
-            valorTotal: item.valorTotal,
-            observacoes: item.observacoes,
-          },
+        // Tentar encontrar o produto pelo nome
+        const produto = await tx.produto.findFirst({
+          where: {
+            nome: item.produto
+          }
         });
+
+        if (produto) {
+          await tx.itemPedido.create({
+            data: {
+              pedidoId: novoPedido.id,
+              produtoId: produto.id,
+              quantidade: item.quantidade,
+              valorUnitario: item.valorUnitario,
+              valorTotal: item.valorTotal,
+              observacoes: item.observacoes,
+            },
+          });
+        }
       }
 
       // Atualizar status do orçamento para CONVERTIDO
@@ -121,11 +126,7 @@ export async function POST(
             numero: true,
           },
         },
-        itens: {
-          include: {
-            produtoRef: true,
-          },
-        },
+        itens: true,
       },
     });
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -46,11 +46,7 @@ export function ProductSelector({ itens, onChange, className }: ProductSelectorP
   const [observacoes, setObservacoes] = useState('')
   const [showQuickAddModal, setShowQuickAddModal] = useState(false)
 
-  useEffect(() => {
-    fetchProdutos()
-  }, [])
-
-  const fetchProdutos = async () => {
+  const fetchProdutos = useCallback(async () => {
     try {
       const params = new URLSearchParams()
       params.append('ativo', 'true')
@@ -64,7 +60,11 @@ export function ProductSelector({ itens, onChange, className }: ProductSelectorP
     } catch (error) {
       console.error('Erro ao carregar produtos:', error)
     }
-  }
+  }, [searchTerm])
+
+  useEffect(() => {
+    fetchProdutos()
+  }, [fetchProdutos])
 
   useEffect(() => {
     const delayedSearch = setTimeout(() => {
@@ -72,7 +72,7 @@ export function ProductSelector({ itens, onChange, className }: ProductSelectorP
     }, 300)
 
     return () => clearTimeout(delayedSearch)
-  }, [searchTerm])
+  }, [searchTerm, fetchProdutos])
 
   const adicionarItem = () => {
     if (!selectedProduto) return

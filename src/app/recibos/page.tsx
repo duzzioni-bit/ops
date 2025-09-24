@@ -122,8 +122,7 @@ export default function RecibosPage() {
       <div className="p-6 space-y-6">
         <PageHeader
           title="Recibos"
-          description="Gerencie os recibos de pagamento"
-          icon={Receipt}
+          subtitle="Gerencie os recibos de pagamento"
         />
 
         {/* Filtros e Ações */}

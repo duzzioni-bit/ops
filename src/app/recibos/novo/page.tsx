@@ -151,8 +151,7 @@ export default function NovoReciboPage() {
       <div className="space-y-6">
         <PageHeader
           title="Novo Recibo"
-          description="Criar um novo recibo de pagamento"
-          icon={Receipt}
+          subtitle="Criar um novo recibo de pagamento"
         />
 
         <div className="flex gap-4 mb-6">

@@ -1,5 +1,6 @@
 import { useCompanyLogo } from '@/hooks/useCompanyConfig'
 import { Loader2 } from 'lucide-react'
+import Image from 'next/image'
 
 interface PageHeaderProps {
   title: string
@@ -16,9 +17,11 @@ export function PageHeader({ title, subtitle, children }: PageHeaderProps) {
         {loading ? (
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         ) : companyInfo.logo ? (
-          <img 
+          <Image 
             src={companyInfo.logo} 
             alt="Logo da empresa" 
+            width={120}
+            height={48}
             className="h-12 w-auto max-w-[120px] object-contain"
           />
         ) : null}

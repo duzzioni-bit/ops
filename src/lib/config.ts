@@ -5,7 +5,7 @@ export interface Configuracao {
   chave: string;
   valor: string;
   tipo: string;
-  descricao?: string;
+  descricao?: string | null;
   categoria: string;
 }
 
