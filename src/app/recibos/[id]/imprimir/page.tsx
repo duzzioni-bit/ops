@@ -190,33 +190,40 @@ export default function ImprimirReciboPage() {
     <div className="bg-white border-2 border-gray-800 p-4 mb-4 print:mb-2 print:p-3" style={{ width: '210mm', minHeight: '140mm' }}>
       {/* Cabeçalho */}
       <div className="border-b border-gray-800 pb-3 mb-4">
-        <div className="text-center bg-gray-100 py-1 px-2 mb-2">
-          <h1 className="text-sm font-bold">Recibo de pagamento de mão de obra</h1>
+        {/* Header com logo à esquerda */}
+        <div className="flex items-start justify-between border-b border-gray-800 pb-2 mb-2">
+          <div className="flex-shrink-0 mr-4">
+            {companyConfig.logoUrl ? (
+              <img 
+                src={companyConfig.logoUrl} 
+                alt="Logo" 
+                className="h-12 w-auto"
+              />
+            ) : (
+              <div className="h-12 flex items-center justify-center">
+                <span className="text-sm font-bold">{companyConfig.nomeEmpresa}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 text-right">
+            <h1 className="text-lg font-bold text-gray-800">{companyConfig.nomeEmpresa}</h1>
+          </div>
         </div>
         
-        <div className="grid grid-cols-4 gap-0 border border-gray-800">
-          <div className="border-r border-gray-800 p-1 bg-gray-200">
-            <div className="text-center">
-              {companyConfig.logoUrl ? (
-                <img 
-                  src={companyConfig.logoUrl} 
-                  alt="Logo" 
-                  className="h-8 w-auto mx-auto mb-1"
-                />
-              ) : (
-                <div className="h-8 flex items-center justify-center mb-1">
-                  <span className="text-xs font-bold">{companyConfig.nomeEmpresa}</span>
-                </div>
-              )}
-              <div className="text-xs font-semibold">Empresa</div>
-            </div>
-          </div>
-          <div className="border-r border-gray-800 p-1 bg-gray-200 text-center">
-            <div className="text-sm font-bold">RECIBO</div>
-          </div>
+        {/* Título do documento */}
+        <div className="text-center bg-gray-100 py-1 px-2 mb-2">
+          <h1 className="text-sm font-bold">RECIBO</h1>
+        </div>
+        
+        {/* Informações do recibo */}
+        <div className="grid grid-cols-3 gap-0 border border-gray-800">
           <div className="border-r border-gray-800 p-1 bg-gray-200 text-center">
             <div className="text-xs mb-1">Nº</div>
             <div className="text-xs font-bold">{recibo.numero}</div>
+          </div>
+          <div className="border-r border-gray-800 p-1 bg-gray-200 text-center">
+            <div className="text-xs mb-1">Data</div>
+            <div className="text-xs font-bold">{formatDate(recibo.data)}</div>
           </div>
           <div className="p-1 bg-gray-200 text-center">
             <div className="text-xs mb-1">Valor R$</div>

@@ -119,7 +119,7 @@ export default function RecibosPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-6">
+      <div className="p-6 space-y-6">
         <PageHeader
           title="Recibos"
           description="Gerencie os recibos de pagamento"
