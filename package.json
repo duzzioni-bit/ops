@@ -12,7 +12,10 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "npx prisma migrate reset --force && npm run db:seed"
+    "db:reset": "npx prisma migrate reset --force && npm run db:seed",
+    "git:update": "git add . && git commit -m \"feat: atualizações automáticas do sistema OPS\" && git push origin main",
+    "git:update-custom": "git add . && git commit -m",
+    "git:status": "git status"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
