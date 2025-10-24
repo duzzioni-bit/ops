@@ -2,6 +2,12 @@
 
 Sistema para gestão operacional de orçamentos e pedidos, desenvolvido com Next.js 15, TypeScript, Tailwind CSS e Shadcn/ui.
 
+## 🌐 Deploy e Produção
+
+**Ambiente de Produção**: [https://ops-orcamentos-pedidos.vercel.app](https://ops-orcamentos-pedidos.vercel.app)
+
+> 📝 Para mais detalhes sobre deploy, consulte o [Guia de Deploy](./README-DEPLOY.md)
+
 ## 🚀 Funcionalidades
 
 - ✅ **Dashboard** com métricas e estatísticas
@@ -35,23 +41,56 @@ Sistema para gestão operacional de orçamentos e pedidos, desenvolvido com Next
 
 ## 🚀 Como executar
 
+### ⚡ Modo Rápido (10 minutos)
+
+**Windows:**
+```powershell
+.\scripts\setup-neon.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x ./scripts/setup-neon.sh
+./scripts/setup-neon.sh
+```
+
+📘 **Guia completo**: [Quick Start](./docs/QUICK-START.md)
+
+### 📋 Modo Manual
+
 1. **Clone o repositório**
 ```bash
 git clone [url-do-repositorio]
 cd ops-orcamentos-pedidos
 ```
 
-2. **Instale as dependências**
+2. **Configure o banco de dados**
+   - Crie conta no [Neon](https://neon.tech)
+   - Crie projeto `ops-orcamentos-pedidos`
+   - Copie as connection strings
+
+3. **Configure variáveis de ambiente**
 ```bash
-npm install
+# Copie o template
+cp env.template .env
+
+# Edite .env com suas credenciais do Neon
 ```
 
-3. **Execute o projeto**
+4. **Instale e configure**
+```bash
+npm install
+npx prisma generate
+npx prisma migrate deploy
+npx prisma db seed
+```
+
+5. **Execute o projeto**
 ```bash
 npm run dev
 ```
 
-4. **Acesse no navegador**
+6. **Acesse no navegador**
 ```
 http://localhost:3000
 ```
@@ -103,12 +142,12 @@ O sistema utiliza dados mockados para demonstração:
 
 ## 🔄 Próximos Passos
 
-- [ ] Implementar autenticação
-- [ ] Conectar com banco de dados
-- [ ] Adicionar testes unitários
-- [ ] Implementar relatórios
-- [ ] Adicionar notificações
-- [ ] Deploy em produção
+- [x] ✅ Implementar autenticação (NextAuth.js)
+- [x] ✅ Conectar com banco de dados (PostgreSQL + Neon)
+- [x] ✅ Deploy em produção (Vercel)
+- [ ] Adicionar testes E2E
+- [ ] Implementar notificações por email
+- [ ] Sistema de permissões granular
 
 ## 📝 Scripts Disponíveis
 
@@ -122,9 +161,17 @@ npm run type-check   # Verificar TypeScript
 
 ## 📚 Documentação
 
+### 🚀 Início Rápido
+- [⚡ Quick Start](./docs/QUICK-START.md) - **Comece aqui!** Setup em 10 minutos
+
+### 🔧 Configuração
+- [Configuração Neon](./docs/NEON-SETUP.md) - Setup detalhado do banco PostgreSQL
+- [Variáveis de Ambiente](./docs/ENV-VARIABLES.md) - Todas as variáveis necessárias
+- [Guia de Deploy](./README-DEPLOY.md) - Deploy em produção na Vercel
+
+### 📖 Documentação Técnica
 - [PRD](./docs/PRD.md) - Documento de Requisitos do Produto
-- [Documentação Técnica](./docs/TECHNICAL.md) - Detalhes técnicos
-- [Regras para IA](./ai/rules.md) - Regras para assistentes de IA
+- [Documentação Técnica](./docs/TECHNICAL.md) - Arquitetura e detalhes técnicos
 
 ## 🤝 Contribuição
 

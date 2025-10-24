@@ -9,7 +9,9 @@ const createPedidoSchema = z.object({
   cliente: z.string().min(1, "Cliente é obrigatório"),
   endereco: z.string().optional().nullable().transform(val => val || undefined),
   valor: z.number().min(0, "Valor deve ser positivo"),
-  status: z.enum(["NOVO", "EM_PRODUCAO", "PRONTO", "ENTREGUE", "CANCELADO"]).optional().default("NOVO"),
+  status: z.string().transform((val) => val.toUpperCase()).pipe(
+    z.enum(["NOVO", "EM_PRODUCAO", "PRONTO", "ENTREGUE", "CANCELADO"])
+  ).optional().default("NOVO"),
   dataEntrega: z.string().transform((val) => new Date(val)),
   observacoes: z.string().optional().nullable().transform(val => val || undefined),
   orcamentoId: z.string().optional().nullable().transform(val => val || undefined),

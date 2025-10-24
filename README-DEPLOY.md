@@ -3,58 +3,126 @@
 ## 📋 Pré-requisitos para Deploy
 
 1. **Conta na Vercel**: [vercel.com](https://vercel.com)
-2. **Banco PostgreSQL**: Recomendamos Vercel Postgres ou Supabase
+2. **Banco PostgreSQL**: **Recomendamos Neon** (3GB gratuito)
+   - Alternativas: Vercel Postgres (256MB) ou Supabase (500MB)
 3. **Repositório Git**: GitHub, GitLab ou Bitbucket
+
+> 📘 **Guia Completo do Neon**: Veja [docs/NEON-SETUP.md](./docs/NEON-SETUP.md) para instruções detalhadas
 
 ## 🛠️ Configuração do Deploy
 
 ### 1. Preparar Banco de Dados
 
-#### Opção A: Vercel Postgres (Recomendado)
+#### Opção A: Neon PostgreSQL ⭐ (RECOMENDADO)
+1. Acesse [neon.tech](https://neon.tech) e crie uma conta
+2. Crie um novo projeto chamado `ops-orcamentos-pedidos`
+3. Copie **DUAS** connection strings:
+   - `DATABASE_URL` (Pooled connection)
+   - `DIRECT_URL` (Direct connection)
+4. **Vantagens**: 3GB gratuito, serverless, branching
+5. **📘 [Guia Detalhado do Neon](./docs/NEON-SETUP.md)**
+
+#### Opção B: Vercel Postgres
 1. No dashboard da Vercel, acesse "Storage"
 2. Crie um novo Postgres database
 3. Copie a `DATABASE_URL` fornecida
+4. **Limitação**: 256MB no plano gratuito
 
-#### Opção B: Supabase
+#### Opção C: Supabase
 1. Crie projeto no [supabase.com](https://supabase.com)
 2. Vá em Settings > Database
 3. Copie a Connection String
+4. **Vantagens**: 500MB gratuito, interface visual
 
 ### 2. Configurar Variáveis de Ambiente
 
-No dashboard da Vercel, adicione:
+#### Localmente (arquivo `.env`)
 
 ```bash
-DATABASE_URL="postgresql://..."
-NEXTAUTH_SECRET="sua-chave-super-secreta"
-NEXTAUTH_URL="https://seu-app.vercel.app"
+# Database - Neon PostgreSQL
+DATABASE_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require&pgbouncer=true"
+DIRECT_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require"
+
+# NextAuth.js
+NEXTAUTH_SECRET="gere-com: openssl rand -base64 32"
+NEXTAUTH_URL="http://localhost:3000"
 ```
 
-### 3. Ajustar Schema do Banco
+#### Na Vercel (Production)
 
-Para PostgreSQL, ajuste o schema em `prisma/schema.prisma`:
+No dashboard da Vercel > Settings > Environment Variables, adicione:
+
+| Variável | Valor | Ambiente |
+|----------|-------|----------|
+| `DATABASE_URL` | Connection string **Pooled** do Neon | Production, Preview, Development |
+| `DIRECT_URL` | Connection string **Direct** do Neon | Production, Preview, Development |
+| `NEXTAUTH_SECRET` | Chave secreta gerada | Production, Preview, Development |
+| `NEXTAUTH_URL` | `https://seu-app.vercel.app` | Production |
+
+### 3. Schema do Banco
+
+✅ **Já configurado!** O projeto já está preparado para PostgreSQL.
+
+O `prisma/schema.prisma` já contém:
 
 ```prisma
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 ```
 
+> O `directUrl` é necessário para migrações no Neon (usa conexão direta ao invés de pooled)
+
 ### 4. Deploy Steps
 
+#### Primeira vez - Setup Local
+
 ```bash
-# 1. Build local
-npm run build
+# 1. Instalar dependências
+npm install
 
-# 2. Deploy na Vercel
-npx vercel
+# 2. Configurar .env com as credenciais do Neon
 
-# 3. Executar migrações
+# 3. Gerar cliente Prisma
+npx prisma generate
+
+# 4. Executar migrações
 npx prisma migrate deploy
 
-# 4. Popular dados iniciais (opcional)
+# 5. Popular dados iniciais (opcional)
 npx prisma db seed
+
+# 6. Testar localmente
+npm run dev
+```
+
+#### Deploy na Vercel
+
+```bash
+# Opção 1: Deploy via Vercel CLI
+npx vercel
+
+# Opção 2: Push para GitHub (deploy automático se conectado)
+git add .
+git commit -m "Configure PostgreSQL with Neon"
+git push origin main
+```
+
+#### Pós-Deploy
+
+Após o deploy, execute as migrações no ambiente de produção:
+
+```bash
+# Via Vercel CLI
+vercel env pull .env.production
+npx prisma migrate deploy --schema=./prisma/schema.prisma
+```
+
+Ou configure no painel da Vercel um **Build Command** customizado:
+```
+npm run build && npx prisma migrate deploy
 ```
 
 ## ⚡ Deploy Automático
